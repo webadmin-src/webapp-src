@@ -57,3 +57,11 @@ def index():
         return render_template('index.html', error='验证码错误，请重新输入')
     
     return render_template('index.html')
+
+@app.route('/robots.txt', methods=['GET', 'POST'])
+def robot():
+    return send_from_directory(app.static_folder,'robots.txt')
+
+@app.route('/webinfo.md', methods=['GET', 'POST'])
+def webinfo():
+    return send_from_directory(app.static_folder,'webinfo.md')
