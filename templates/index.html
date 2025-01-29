@@ -21,11 +21,14 @@
             max-width: 500px;
             margin: 0 auto;
         }
-        #codeInput { display: none; }
+        #codeInput {
+            transition: opacity 0.3s ease;
+        }
         .cool-font {
             font-family: 'Arial Rounded MT Bold', sans-serif;
             color: #2c3e50;
         }
+        /* 自定义Modal样式 */
         .modal-alert {
             border: none;
             border-radius: 15px;
@@ -44,6 +47,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- 风险提示Modal -->
         <div class="modal fade" id="riskModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-alert risk-modal">
@@ -67,6 +71,7 @@
             </div>
         </div>
 
+        <!-- 错误提示Modal -->
         <div class="modal fade" id="errorModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-alert error-modal">
@@ -128,11 +133,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // 显示风险提示
         function showRiskAlert() {
             const modal = new bootstrap.Modal('#riskModal')
             modal.show()
         }
 
+        // 显示错误提示
         function showErrorAlert() {
             const modal = new bootstrap.Modal('#errorModal')
             modal.show()
@@ -141,6 +148,7 @@
         function sendCode() {
             const btn = document.getElementById('sendBtn');
             
+            // 显示加载状态
             btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> 安全检查中...`;
             btn.disabled = true;
 
@@ -151,7 +159,22 @@
             }, 1000);
         }
 
+        // 页面加载时检查是否有错误
         document.addEventListener('DOMContentLoaded', function() {
+            // 初始化界面状态
+            const hasError = {% if error %}true{% else %}false{% endif %};
+            const hasFlag = {% if flag %}true{% else %}false{% endif %};
+            const codeInput = document.getElementById('codeInput');
+            const sendBtn = document.getElementById('sendBtn');
+
+            if (hasError || hasFlag) {
+                sendBtn.style.display = 'none';
+                codeInput.style.display = 'block';
+            } else {
+                sendBtn.style.display = 'block';
+                codeInput.style.display = 'none';
+            }
+
             {% if error %}
                 showErrorAlert();
             {% endif %}
